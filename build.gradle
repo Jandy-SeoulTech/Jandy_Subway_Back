@@ -29,6 +29,8 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
+	implementation group: 'org.easymock', name: 'easymock', version: 4.3
+
 }
 
 tasks.named('test') {
