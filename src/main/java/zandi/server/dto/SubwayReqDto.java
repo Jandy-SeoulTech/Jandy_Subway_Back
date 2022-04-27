@@ -1,5 +1,6 @@
 package zandi.server.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -7,8 +8,8 @@ import lombok.ToString;
 import java.util.HashMap;
 
 @Getter
-@Setter
 @ToString
+@AllArgsConstructor
 public class SubwayReqDto {
 
     private HashMap<String, String> startStation;

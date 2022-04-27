@@ -1,0 +1,13 @@
+{
+  "startStation" : {
+    "stationName" : "태릉입구",
+    "stationNum" : "7호선"
+  },
+  "endStation" : {
+    "stationName" : "강남",
+    "stationNum" : "2호선"
+  },
+  "trainNum" : 2414,
+  "transferStation" : "건대입구",
+  "startTime" : "12:42:11"
+}
