@@ -12,6 +12,7 @@ import java.util.HashMap;
 @AllArgsConstructor
 public class SubwayReqDto {
 
+    private int requestType;
     private HashMap<String, String> startStation;
     private HashMap<String, String> endStation;
     private int trainNum;
