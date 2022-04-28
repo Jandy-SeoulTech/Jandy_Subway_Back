@@ -1,6 +1,7 @@
 package zandi.server.domain;
 
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -12,5 +13,5 @@ public interface Subway {
 
     JSONObject getStationTimeTableByCd(JSONObject requestData);
 
-    JSONObject getArriveInfoByName(String stationName) throws IOException, ParseException;
+    JSONArray getArriveInfoByName(String stationName) throws IOException, ParseException;
 }
