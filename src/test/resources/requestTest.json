@@ -1,4 +1,5 @@
 {
+  "requestType" : 4,
   "startStation" : {
     "stationName" : "태릉입구",
     "stationNum" : "7호선"
