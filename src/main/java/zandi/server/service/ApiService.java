@@ -1,13 +1,15 @@
 package zandi.server.service;
 
-import zandi.server.dto.SubwayReqDto;
-import zandi.server.dto.SubwayResDto;
+import zandi.server.dto.AlarmReqDto;
+import zandi.server.dto.AlarmResDto;
+import zandi.server.dto.RouteResDto;
+import zandi.server.dto.TrainResDto;
 
 public interface ApiService {
 
-    SubwayResDto routeInfo(SubwayReqDto subwayReqDto);
+    RouteResDto routeInfo(String route, String stationName);
 
-    SubwayResDto trainPos(SubwayReqDto subwayReqDto);
+    TrainResDto trainPos(int trainNum);
 
-    SubwayReqDto alarmInit(SubwayReqDto subwayReqDto);
+    AlarmResDto alarmInit(AlarmReqDto alarmReqDto);
 }
