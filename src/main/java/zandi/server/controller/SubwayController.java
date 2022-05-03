@@ -17,7 +17,7 @@ public class SubwayController {
     private final ApiService apiService;
 
     @ApiOperation(value = "해당 역과 호선의 운행정보 가져오기", notes = "요청한 역과 호선의 운행정보를 알려준다.")
-    @PostMapping(value = "/subway/{route}/{stationName}")
+    @GetMapping(value = "/subway/{route}/{stationName}")
     public @ResponseBody ResponseEntity<RouteResDto> routeInfo(@PathVariable String route, @PathVariable String stationName) {
 
         return ResponseEntity.ok(new RouteResDto());
