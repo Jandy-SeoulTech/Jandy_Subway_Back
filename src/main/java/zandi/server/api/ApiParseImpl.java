@@ -15,7 +15,7 @@ public class ApiParseImpl implements ApiParse {
 
     private final String realTimeKey = "565753674a656e6a3830575555667a";
     private final String generalKey = "7862756769656e6a3130386b44566854";
-    private StringBuilder urlBuilder = new StringBuilder("http://swopenAPI.seoul.go.kr/api/subway");
+    private StringBuilder urlBuilder;
     private JSONParser jsonParser = new JSONParser();
 
     private JSONArray routeInfo;
@@ -30,11 +30,12 @@ public class ApiParseImpl implements ApiParse {
 
     private HttpURLConnection buildURL(String key, String service, String option) {
         try {
+            urlBuilder = new StringBuilder("http://swopenAPI.seoul.go.kr/api/subway");
             urlBuilder.append("/" + URLEncoder.encode(key, "UTF-8"));
             urlBuilder.append("/" + URLEncoder.encode("json", "UTF-8"));
             urlBuilder.append("/" + URLEncoder.encode(service, "UTF-8"));
             urlBuilder.append("/" + URLEncoder.encode("1", "UTF-8"));
-            urlBuilder.append("/" + URLEncoder.encode("10", "UTF-8"));
+            urlBuilder.append("/" + URLEncoder.encode("100", "UTF-8"));
             urlBuilder.append("/" + URLEncoder.encode(option, "UTF-8"));
 
             HttpURLConnection conn = (HttpURLConnection) (new URL(urlBuilder.toString())).openConnection();
@@ -79,7 +80,10 @@ public class ApiParseImpl implements ApiParse {
                     if(infoRoute.startsWith("0")) {
                         infoRoute = infoRoute.substring(1);
                     }
-                    if (endStation.equals(info.get("전철역명")) && route.equals(infoRoute)) {
+                    if(endStation.equals(statNm)) continue;
+                    if (endStation.equals(info.get("전철역명")) && route.equals(infoRoute) && (object.get("barvlDt") != "0")) {
+                        System.out.println(infoRoute);
+                        System.out.println(info.get("전철역명"));
                         returnArray.add(object);
                     }
                 }
@@ -92,7 +96,15 @@ public class ApiParseImpl implements ApiParse {
 
     @Override
     public JSONArray getSubwayPosByNum(String route) {
-        return null;
+        StringBuilder data = getData(buildURL(realTimeKey, "realtimePosition", route));
+        JSONArray returnArray = new JSONArray();
+        try {
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(data.toString());
+            returnArray = (JSONArray) jsonObject.get("realtimePositionList");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return returnArray;
     }
 
     @Override
