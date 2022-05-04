@@ -15,14 +15,14 @@ public class ApiParseImpl implements ApiParse {
 
     private final String realTimeKey = "565753674a656e6a3830575555667a";
     private final String generalKey = "7862756769656e6a3130386b44566854";
-    private StringBuilder urlBuilder = new StringBuilder("http://openapi.seoul.go.kr:8088");
+    private StringBuilder urlBuilder = new StringBuilder("http://swopenAPI.seoul.go.kr/api/subway");
     private JSONParser jsonParser = new JSONParser();
 
     private JSONArray routeInfo;
 
     public ApiParseImpl() {
         try {
-            routeInfo = (JSONArray) jsonParser.parse(new FileReader("resources/routeInfo.json"));
+            routeInfo = (JSONArray) jsonParser.parse(new FileReader("src/main/resources/routeInfo.json"));
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
@@ -34,7 +34,7 @@ public class ApiParseImpl implements ApiParse {
             urlBuilder.append("/" + URLEncoder.encode("json", "UTF-8"));
             urlBuilder.append("/" + URLEncoder.encode(service, "UTF-8"));
             urlBuilder.append("/" + URLEncoder.encode("1", "UTF-8"));
-            urlBuilder.append("/" + URLEncoder.encode("100", "UTF-8"));
+            urlBuilder.append("/" + URLEncoder.encode("10", "UTF-8"));
             urlBuilder.append("/" + URLEncoder.encode(option, "UTF-8"));
 
             HttpURLConnection conn = (HttpURLConnection) (new URL(urlBuilder.toString())).openConnection();
@@ -65,18 +65,29 @@ public class ApiParseImpl implements ApiParse {
     @Override
     public JSONArray getSubwayPosByName(String route, String statNm) {
         StringBuilder data = getData(buildURL(realTimeKey, "realtimeStationArrival", statNm));
+        JSONArray returnArray = new JSONArray();
         try {
             JSONObject jsonObject = (JSONObject) jsonParser.parse(data.toString());
             JSONArray jsonArray = (JSONArray) jsonObject.get("realtimeArrivalList");
-            jsonArray.forEach(item -> {
-                JSONObject object = (JSONObject) item;
-                String endStation = object.get("ordkey").toString().substring(5, -1);
-
-            });
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject object = (JSONObject) jsonArray.get(i);
+                String temp = object.get("ordkey").toString();
+                String endStation = temp.substring(5, temp.length() - 1);
+                for (Object o : routeInfo) {
+                    JSONObject info = (JSONObject) o;
+                    String infoRoute = info.get("호선").toString();
+                    if(infoRoute.startsWith("0")) {
+                        infoRoute = infoRoute.substring(1);
+                    }
+                    if (endStation.equals(info.get("전철역명")) && route.equals(infoRoute)) {
+                        returnArray.add(object);
+                    }
+                }
+            }
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        return null;
+        return returnArray;
     }
 
     @Override
