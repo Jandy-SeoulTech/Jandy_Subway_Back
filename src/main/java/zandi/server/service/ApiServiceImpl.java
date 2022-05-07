@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
-public class ApiServiceImpl implements ApiService{
+public class ApiServiceImpl implements ApiService {
 
     private final ApiParse apiParse = new ApiParseImpl();
     private final ObjectMapper objectMapper = new ObjectMapper();

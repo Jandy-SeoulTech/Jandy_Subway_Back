@@ -19,6 +19,7 @@ public class ApiParseImpl implements ApiParse {
     private JSONParser jsonParser = new JSONParser();
 
     private JSONArray routeInfo;
+    private JSONObject specialStation;
 
     public ApiParseImpl() {
         try {
@@ -63,9 +64,22 @@ public class ApiParseImpl implements ApiParse {
         }
     }
 
+    private String checkName(String statNm) {
+        try {
+            specialStation = (JSONObject) jsonParser.parse(new FileReader("src/main/resources/specialStation.json"));
+            if(specialStation.containsKey(statNm)) {
+                return specialStation.get(statNm).toString();
+            }
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        return statNm;
+    }
+
     @Override
-    public JSONArray getSubwayPosByName(String route, String statNm) {
-        StringBuilder data = getData(buildURL(realTimeKey, "realtimeStationArrival", statNm));
+    public JSONArray getSubwayPosByName(String route, String statnNm) {
+        String newStatnNm = checkName(statnNm);
+        StringBuilder data = getData(buildURL(realTimeKey, "realtimeStationArrival", checkName(statnNm)));
         JSONArray returnArray = new JSONArray();
         try {
             JSONObject jsonObject = (JSONObject) jsonParser.parse(data.toString());
@@ -80,7 +94,7 @@ public class ApiParseImpl implements ApiParse {
                     if(infoRoute.startsWith("0")) {
                         infoRoute = infoRoute.substring(1);
                     }
-                    if(endStation.equals(statNm)) continue;
+                    if(endStation.equals(statnNm)) continue;
                     if (endStation.equals(info.get("전철역명")) && route.equals(infoRoute) && (object.get("barvlDt") != "0")) {
                         System.out.println(infoRoute);
                         System.out.println(info.get("전철역명"));

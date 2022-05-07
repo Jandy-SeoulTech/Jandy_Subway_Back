@@ -20,7 +20,7 @@ public class SubwayController {
     @GetMapping(value = "/subway/{route}/{stationName}")
     public @ResponseBody ResponseEntity<RouteResDto> routeInfo(@PathVariable String route, @PathVariable String stationName) {
 
-        return ResponseEntity.ok(new RouteResDto());
+        return ResponseEntity.ok(apiService.routeInfo(route, stationName));
     }
 
     @ApiOperation(value = "열차 위치정보 가져오기", notes = "열차 번호로 현재 열차가 목적지에 도착하는지 알려준다.")
