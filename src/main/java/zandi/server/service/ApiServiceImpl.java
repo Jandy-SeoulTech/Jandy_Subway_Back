@@ -40,6 +40,7 @@ public class ApiServiceImpl implements ApiService {
             obj.put("congestion", "null");
             obj.put("statTnm", temp.get("bstatnNm"));
             obj.put("btrainSttus", temp.get("btrainSttus"));
+            obj.put("trainNo", temp.get("btrainNo"));
             arriveResult.add(objectMapper.convertValue(obj, HashMap.class));
         }
         resultDto.setArriveInfo(arriveResult);
