@@ -4,6 +4,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -11,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 
+@Component
 public class ApiParseImpl implements ApiParse {
 
     private final String realTimeKey = "565753674a656e6a3830575555667a";
@@ -18,11 +22,17 @@ public class ApiParseImpl implements ApiParse {
     private StringBuilder urlBuilder;
     private JSONParser jsonParser = new JSONParser();
 
+    @Value("src/main/resources/routeInfo.json")
+    private Resource routeSource;
+    @Value("src/main/resources/specialStation.json")
+    private Resource specialSource;
+
     private JSONArray routeInfo;
     private JSONObject specialStation;
 
     public ApiParseImpl() {
         try {
+//            routeInfo = (JSONArray) jsonParser.parse(new BufferedReader(new InputStreamReader(routeSource.getInputStream())));
             routeInfo = (JSONArray) jsonParser.parse(new FileReader("src/main/resources/routeInfo.json"));
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
