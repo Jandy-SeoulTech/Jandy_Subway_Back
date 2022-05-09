@@ -15,12 +15,11 @@ import zandi.server.dto.TrainResDto;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 @Service
 @RequiredArgsConstructor
 public class ApiServiceImpl implements ApiService {
 
-    private final ApiParse apiParse = new ApiParseImpl();
+    private final ApiParse apiParse;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
