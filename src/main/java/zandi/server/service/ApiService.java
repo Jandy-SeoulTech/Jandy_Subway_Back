@@ -1,9 +1,6 @@
 package zandi.server.service;
 
-import zandi.server.dto.AlarmReqDto;
-import zandi.server.dto.AlarmResDto;
-import zandi.server.dto.RouteResDto;
-import zandi.server.dto.TrainResDto;
+import zandi.server.dto.*;
 
 public interface ApiService {
 
@@ -12,4 +9,6 @@ public interface ApiService {
     TrainResDto trainPos(int trainNum);
 
     AlarmResDto alarmInit(AlarmReqDto alarmReqDto);
+
+    StationResDto stationInfo(String route);
 }

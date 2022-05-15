@@ -10,6 +10,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ApiParseImpl implements ApiParse {
 
@@ -24,6 +26,7 @@ public class ApiParseImpl implements ApiParse {
     public ApiParseImpl() {
         try {
             routeInfo = (JSONArray) jsonParser.parse(new FileReader("src/main/resources/routeInfo.json"));
+            specialStation = (JSONObject) jsonParser.parse(new FileReader("src/main/resources/specialStation.json"));
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
@@ -65,13 +68,8 @@ public class ApiParseImpl implements ApiParse {
     }
 
     private String checkName(String statNm) {
-        try {
-            specialStation = (JSONObject) jsonParser.parse(new FileReader("src/main/resources/specialStation.json"));
-            if(specialStation.containsKey(statNm)) {
-                return specialStation.get(statNm).toString();
-            }
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
+        if (specialStation.containsKey(statNm)) {
+            return specialStation.get(statNm).toString();
         }
         return statNm;
     }
@@ -91,10 +89,10 @@ public class ApiParseImpl implements ApiParse {
                 for (Object o : routeInfo) {
                     JSONObject info = (JSONObject) o;
                     String infoRoute = info.get("호선").toString();
-                    if(infoRoute.startsWith("0")) {
+                    if (infoRoute.startsWith("0")) {
                         infoRoute = infoRoute.substring(1);
                     }
-                    if(endStation.equals(statnNm)) continue;
+                    if (endStation.equals(statnNm)) continue;
                     if (endStation.equals(info.get("전철역명")) && route.equals(infoRoute) && (object.get("barvlDt") != "0")) {
                         System.out.println(infoRoute);
                         System.out.println(info.get("전철역명"));
@@ -124,5 +122,24 @@ public class ApiParseImpl implements ApiParse {
     @Override
     public JSONArray getTimeTable(String route, String statNm) {
         return null;
+    }
+
+    @Override
+    public JSONArray getStationList(String route) {
+        JSONArray returnArray = new JSONArray();
+        for (Object o : routeInfo) {
+            JSONObject info = (JSONObject) o;
+            JSONObject tempObj = new JSONObject();
+            String infoRoute = info.get("호선").toString();
+            if (infoRoute.startsWith("0")) {
+                infoRoute = infoRoute.substring(1);
+            }
+            if(route.equals("전체") || route.equals(infoRoute)) {
+                tempObj.put("호선", infoRoute);
+                tempObj.put("전철역명", info.get("전철역명"));
+                returnArray.add(tempObj);
+            }
+        }
+        return returnArray;
     }
 }

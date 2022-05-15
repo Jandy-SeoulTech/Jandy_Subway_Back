@@ -7,10 +7,7 @@ import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import zandi.server.api.ApiParse;
 import zandi.server.api.ApiParseImpl;
-import zandi.server.dto.AlarmReqDto;
-import zandi.server.dto.AlarmResDto;
-import zandi.server.dto.RouteResDto;
-import zandi.server.dto.TrainResDto;
+import zandi.server.dto.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,5 +72,17 @@ public class ApiServiceImpl implements ApiService {
     @Override
     public AlarmResDto alarmInit(AlarmReqDto alarmReqDto) {
         return null;
+    }
+
+    @Override
+    public StationResDto stationInfo(String route) {
+        StationResDto stationResDto = new StationResDto();
+        ArrayList<HashMap<String, String>> returnArray = new ArrayList<>();
+        JSONArray jsonArray = apiParse.getStationList(route);
+        for (Object station : jsonArray) {
+            returnArray.add(objectMapper.convertValue(station, HashMap.class));
+        }
+        stationResDto.setStationInfo(returnArray);
+        return stationResDto;
     }
 }

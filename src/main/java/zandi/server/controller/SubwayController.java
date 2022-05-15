@@ -4,10 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import zandi.server.dto.AlarmReqDto;
-import zandi.server.dto.AlarmResDto;
-import zandi.server.dto.RouteResDto;
-import zandi.server.dto.TrainResDto;
+import zandi.server.dto.*;
 import zandi.server.service.ApiService;
 
 @RestController
@@ -15,6 +12,13 @@ import zandi.server.service.ApiService;
 public class SubwayController {
 
     private final ApiService apiService;
+
+    @ApiOperation(value = "지하철 역 목록 가져오기", notes = "요청한 호선의 역 목록을 알려준다.")
+    @GetMapping(value = "/station/{route}")
+    public @ResponseBody
+    ResponseEntity<StationResDto> stationInfo(@PathVariable String route) {
+        return ResponseEntity.ok(apiService.stationInfo(route));
+    }
 
     @ApiOperation(value = "해당 역과 호선의 운행정보 가져오기", notes = "요청한 역과 호선의 운행정보를 알려준다.")
     @GetMapping(value = "/subway/{route}/{stationName}")
