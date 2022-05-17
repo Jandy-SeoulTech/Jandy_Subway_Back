@@ -24,4 +24,7 @@ public class AlarmReqDto {
 
     @ApiModelProperty(example = "12:42")
     private String startTime;
+
+    @ApiModelProperty(example = "1")
+    private int day;
 }
