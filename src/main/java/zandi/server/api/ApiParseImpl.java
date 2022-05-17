@@ -85,7 +85,6 @@ public class ApiParseImpl implements ApiParse {
 
     @Override
     public JSONArray getSubwayPosByName(String route, String statnNm) {
-        String newStatnNm = checkName(statnNm);
         StringBuilder data = getData(buildURL(realTimeKey, "realtimeStationArrival", checkName(statnNm)));
         JSONArray returnArray = new JSONArray();
         try {
