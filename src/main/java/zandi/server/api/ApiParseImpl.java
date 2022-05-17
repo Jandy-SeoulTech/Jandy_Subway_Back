@@ -4,29 +4,31 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
 
+@Component
 public class ApiParseImpl implements ApiParse {
 
     private final String realTimeKey = "565753674a656e6a3830575555667a";
     private final String generalKey = "7862756769656e6a3130386b44566854";
     private StringBuilder urlBuilder;
     private JSONParser jsonParser = new JSONParser();
-
+    private ClassPathResource routePath;
+    private ClassPathResource specialPath;
     private JSONArray routeInfo;
     private JSONObject specialStation;
 
     public ApiParseImpl() {
+        routePath = new ClassPathResource("routeInfo.json");
         try {
-            routeInfo = (JSONArray) jsonParser.parse(new FileReader("src/main/resources/routeInfo.json"));
-            specialStation = (JSONObject) jsonParser.parse(new FileReader("src/main/resources/specialStation.json"));
+            InputStream in = new BufferedInputStream(routePath.getInputStream());
+            routeInfo = (JSONArray) jsonParser.parse(new InputStreamReader(in, "UTF-8"));
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
@@ -68,15 +70,21 @@ public class ApiParseImpl implements ApiParse {
     }
 
     private String checkName(String statNm) {
-        if (specialStation.containsKey(statNm)) {
-            return specialStation.get(statNm).toString();
+        specialPath = new ClassPathResource("specialStation.json");
+        try {
+            InputStream in = new BufferedInputStream(specialPath.getInputStream());
+            specialStation = (JSONObject) jsonParser.parse(new InputStreamReader(in, "UTF-8"));
+            if(specialStation.containsKey(statNm)) {
+                return specialStation.get(statNm).toString();
+            }
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
         }
         return statNm;
     }
 
     @Override
     public JSONArray getSubwayPosByName(String route, String statnNm) {
-        String newStatnNm = checkName(statnNm);
         StringBuilder data = getData(buildURL(realTimeKey, "realtimeStationArrival", checkName(statnNm)));
         JSONArray returnArray = new JSONArray();
         try {
@@ -89,10 +97,10 @@ public class ApiParseImpl implements ApiParse {
                 for (Object o : routeInfo) {
                     JSONObject info = (JSONObject) o;
                     String infoRoute = info.get("호선").toString();
-                    if (infoRoute.startsWith("0")) {
+                    if(infoRoute.startsWith("0")) {
                         infoRoute = infoRoute.substring(1);
                     }
-                    if (endStation.equals(statnNm)) continue;
+                    if(endStation.equals(statnNm)) continue;
                     if (endStation.equals(info.get("전철역명")) && route.equals(infoRoute) && (object.get("barvlDt") != "0")) {
                         System.out.println(infoRoute);
                         System.out.println(info.get("전철역명"));
@@ -122,24 +130,5 @@ public class ApiParseImpl implements ApiParse {
     @Override
     public JSONArray getTimeTable(String route, String statNm) {
         return null;
-    }
-
-    @Override
-    public JSONArray getStationList(String route) {
-        JSONArray returnArray = new JSONArray();
-        for (Object o : routeInfo) {
-            JSONObject info = (JSONObject) o;
-            JSONObject tempObj = new JSONObject();
-            String infoRoute = info.get("호선").toString();
-            if (infoRoute.startsWith("0")) {
-                infoRoute = infoRoute.substring(1);
-            }
-            if(route.equals("전체") || route.equals(infoRoute)) {
-                tempObj.put("호선", infoRoute);
-                tempObj.put("전철역명", info.get("전철역명"));
-                returnArray.add(tempObj);
-            }
-        }
-        return returnArray;
     }
 }

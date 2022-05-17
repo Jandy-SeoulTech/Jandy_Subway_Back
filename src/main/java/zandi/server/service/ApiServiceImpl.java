@@ -12,12 +12,11 @@ import zandi.server.dto.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 @Service
 @RequiredArgsConstructor
 public class ApiServiceImpl implements ApiService {
 
-    private final ApiParse apiParse = new ApiParseImpl();
+    private final ApiParse apiParse;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -37,6 +36,7 @@ public class ApiServiceImpl implements ApiService {
             obj.put("congestion", "null");
             obj.put("statTnm", temp.get("bstatnNm"));
             obj.put("btrainSttus", temp.get("btrainSttus"));
+            obj.put("trainNo", temp.get("btrainNo"));
             arriveResult.add(objectMapper.convertValue(obj, HashMap.class));
         }
         resultDto.setArriveInfo(arriveResult);
