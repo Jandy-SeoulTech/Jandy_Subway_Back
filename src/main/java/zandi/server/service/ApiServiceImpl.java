@@ -80,7 +80,11 @@ public class ApiServiceImpl implements ApiService {
         ArrayList<HashMap<String, String>> returnArray = new ArrayList<>();
         JSONArray jsonArray = apiParse.getStationList(route);
         for (Object station : jsonArray) {
-            returnArray.add(objectMapper.convertValue(station, HashMap.class));
+            JSONObject temp = (JSONObject) station;
+            temp.remove("전철역코드");
+            temp.remove("전철명명(영문)");
+            temp.remove("외부코드");
+            returnArray.add(objectMapper.convertValue(temp, HashMap.class));
         }
         stationResDto.setStationInfo(returnArray);
         return stationResDto;

@@ -4,9 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -130,5 +128,22 @@ public class ApiParseImpl implements ApiParse {
     @Override
     public JSONArray getTimeTable(String route, String statNm) {
         return null;
+    }
+
+    @Override
+    public JSONArray getStationList(String route) {
+        JSONArray returnArray = new JSONArray();
+        for (Object o : routeInfo) {
+            JSONObject info = (JSONObject) o;
+            String infoRoute = info.get("호선").toString();
+            if(infoRoute.startsWith("0")) {
+                infoRoute = infoRoute.substring(1);
+                info.replace("호선", infoRoute);
+            }
+            if (infoRoute.equals(route) || route.equals("전체")) {
+                returnArray.add(info);
+            }
+        }
+        return returnArray;
     }
 }
