@@ -3,7 +3,7 @@
 
 ---
 commit convention
-```aidl
+```
 Feature : (해당 커밋에서 개발한 내용) (#이슈번호)
 Bug : (해당 커밋에서 개발한 내용) (#이슈번호)
 Refactor : (해당 커밋에서 개발한 내용) (#이슈번호)
