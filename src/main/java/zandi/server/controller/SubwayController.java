@@ -28,10 +28,10 @@ public class SubwayController {
     }
 
     @ApiOperation(value = "열차 위치정보 가져오기", notes = "열차 번호로 현재 열차가 목적지에 도착하는지 알려준다.")
-    @GetMapping(value = "/subway/{trainNum}")
-    public @ResponseBody ResponseEntity<TrainResDto> trainPosition(@PathVariable int trainNum) {
+    @GetMapping(value = "/subway/{route}/{stationName}/{trainNum}")
+    public @ResponseBody ResponseEntity<TrainResDto> trainPosition(@PathVariable String route, @PathVariable String stationName, @PathVariable String trainNum) {
 
-        return ResponseEntity.ok(new TrainResDto());
+        return ResponseEntity.ok(apiService.trainPos(route, stationName, trainNum));
     }
 
     @ApiOperation(value = "알람 생성에 필요한 정보 가져오기", notes = "출발역과 도착역, 환승역(옵션), 출발시간으로 알람 생성에 필요한 정보를 가져온다.")

@@ -6,7 +6,7 @@ public interface ApiService {
 
     RouteResDto routeInfo(String route, String stationName);
 
-    TrainResDto trainPos(int trainNum);
+    TrainResDto trainPos(String route, String stationName, String trainNum);
 
     AlarmResDto alarmInit(AlarmReqDto alarmReqDto);
 

@@ -65,8 +65,18 @@ public class ApiServiceImpl implements ApiService {
     }
 
     @Override
-    public TrainResDto trainPos(int trainNum) {
-        return null;
+    public TrainResDto trainPos(String route, String stationName, String trainNum) {
+        TrainResDto trainResDto = new TrainResDto();
+        JSONArray result = apiParse.getSubwayPosByName(route, stationName);
+        for (Object o : result) {
+            JSONObject train = (JSONObject) o;
+            if (train.get("btrainNo").equals(trainNum) && (Integer.valueOf((String) train.get("barvlDt")) <= 120)) {
+                trainResDto.setStatus("접근중");
+                return trainResDto;
+            }
+        }
+        trainResDto.setStatus("도착정보없음");
+        return trainResDto;
     }
 
     @Override
